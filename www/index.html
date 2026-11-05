@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0b0f19">
+<title>Soldadura Sanjo Simulator</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="gameCanvas"></canvas>
+<div id="flash"></div>
+
+<!-- HUD (durante el juego) -->
+<div id="hud" class="hidden">
+  <div class="chip"><small>TIEMPO</small><b id="hudTimer" class="mono">01:30</b></div>
+  <div class="chip"><small>PRECISIÓN</small><b id="hudPrecision" class="mono">100.0%</b></div>
+  <div class="chip"><small>PUNTAJE</small><b id="hudScore" class="mono amber">00000</b></div>
+  <div class="heat">
+    <small>TEMP. ANTORCHA</small>
+    <div class="heatTrack"><div id="heatBar"></div></div>
+  </div>
+  <button id="pauseBtn" aria-label="Pausa">❚❚</button>
+</div>
+
+<div id="banner" class="hidden">⚠ ¡ÚLTIMOS 10 SEGUNDOS!</div>
+
+<!-- Botón de soldar (mantener presionado) -->
+<button id="weldBtn" class="hidden" aria-label="Soldar"><span>⚡<br>SOLDAR</span></button>
+
+<!-- MENÚ -->
+<div id="menu" class="overlay">
+  <div class="panel scroll">
+    <div class="tag">Entrenamiento técnico</div>
+    <h1>SOLDADURA <span>SANJO</span> SIMULATOR</h1>
+    <p class="sub">Elige un patrón y sigue la línea con la antorcha. Tienes <b class="amber">01:30</b> minutos.</p>
+
+    <div id="levels" class="levels"></div>
+
+    <div class="settings">
+      <button class="toggle" data-setting="autoWeld">Auto-soldar al tocar</button>
+      <button class="toggle" data-setting="haptics">Vibración</button>
+      <button class="toggle" data-setting="sound">Sonido</button>
+      <button class="toggle" data-setting="lefty">Modo zurdo</button>
+    </div>
+    <p id="helpText" class="help"></p>
+
+    <button id="startBtn" class="primary">▶ INICIAR NIVEL</button>
+  </div>
+</div>
+
+<!-- PAUSA -->
+<div id="pause" class="overlay hidden">
+  <div class="panel narrow">
+    <h2>PAUSA</h2>
+    <button id="resumeBtn" class="primary">▶ CONTINUAR</button>
+    <div class="row">
+      <button id="restartBtn" class="secondary">↻ REINICIAR</button>
+      <button id="pauseMenuBtn" class="secondary">☰ MENÚ</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTADOS -->
+<div id="results" class="overlay hidden">
+  <div class="panel wide scroll">
+    <div class="tag">Reporte técnico de soldadura</div>
+    <div class="resGrid">
+      <div class="gradeCol">
+        <div class="gradeCircle">
+          <small>CALIFICACIÓN</small>
+          <span id="finalGrade">A</span>
+        </div>
+        <div id="recordTag" class="record hidden">★ ¡NUEVO RÉCORD!</div>
+      </div>
+      <div class="metricsCol">
+        <div class="metrics mono">
+          <div><span>Precisión de guía</span><b id="resPrecision">0%</b></div>
+          <div><span>Cobertura del cordón</span><b id="resCoverage">0%</b></div>
+          <div><span>Tiempo empleado</span><b id="resTime">0s</b></div>
+          <div class="total"><span>PUNTAJE TOTAL</span><b id="resTotalScore" class="amber">0 PTS</b></div>
+        </div>
+        <div id="resFeedback" class="feedback"></div>
+      </div>
+    </div>
+    <div class="row">
+      <button id="againBtn" class="primary">↻ REPETIR</button>
+      <button id="resultsMenuBtn" class="secondary">☰ MENÚ</button>
+    </div>
+  </div>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>

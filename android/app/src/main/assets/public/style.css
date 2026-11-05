@@ -1,0 +1,220 @@
+/* Fuentes empaquetadas dentro de la app (funciona sin internet) */
+@font-face { font-family: 'Chakra Petch'; font-weight: 400; src: url('fonts/chakra-petch-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Chakra Petch'; font-weight: 600; src: url('fonts/chakra-petch-latin-600-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Chakra Petch'; font-weight: 700; src: url('fonts/chakra-petch-latin-700-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Share Tech Mono'; font-weight: 400; src: url('fonts/share-tech-mono-latin-400-normal.woff2') format('woff2'); }
+
+:root {
+  --sky: #38bdf8;
+  --sky-dark: #0284c7;
+  --amber: #fbbf24;
+  --bg: #0b0f19;
+  --panel: rgba(15, 23, 42, 0.96);
+  --line: #334155;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  margin: 0; height: 100%; width: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Chakra Petch', system-ui, sans-serif;
+  font-size: 14px;
+  touch-action: none;
+  user-select: none; -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  overscroll-behavior: none;
+}
+
+button { font-family: inherit; color: inherit; border: 0; cursor: pointer; }
+.hidden { display: none !important; }
+.mono { font-family: 'Share Tech Mono', monospace; }
+.amber { color: var(--amber); }
+
+#gameCanvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+
+#flash {
+  position: fixed; inset: 0; background: rgba(220, 38, 38, 0.35);
+  opacity: 0; pointer-events: none; transition: opacity 0.1s; z-index: 5;
+}
+
+/* ---------- HUD ---------- */
+#hud {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+  display: flex; align-items: stretch; gap: 8px;
+  padding: calc(6px + var(--sat)) calc(10px + var(--sar)) 0 calc(10px + var(--sal));
+  pointer-events: none;
+}
+.chip {
+  background: rgba(15, 23, 42, 0.85); border: 2px solid var(--line);
+  border-radius: 10px; padding: 3px 10px; text-align: center; min-width: 74px;
+}
+.chip small { display: block; font-size: 9px; letter-spacing: 1px; color: var(--muted); font-weight: 700; }
+.chip b { font-size: 18px; color: var(--sky); letter-spacing: 1px; }
+.chip b.amber { color: var(--amber); }
+.chip.danger { border-color: #ef4444; background: rgba(69, 10, 10, 0.85); }
+.chip.danger b { color: #f87171; }
+
+.heat { margin-left: auto; display: flex; flex-direction: column; justify-content: center; min-width: 120px; flex: 0 1 190px; }
+.heat small { font-size: 9px; letter-spacing: 1px; color: var(--muted); font-weight: 700; margin-bottom: 3px; }
+.heatTrack {
+  height: 14px; background: rgba(15, 23, 42, 0.9); border: 2px solid var(--line);
+  border-radius: 9px; padding: 1px; overflow: hidden;
+}
+#heatBar {
+  height: 100%; width: 0%; border-radius: 6px;
+  background: linear-gradient(90deg, #10b981, #f59e0b 60%, #dc2626);
+}
+.heat.over .heatTrack { border-color: #ef4444; animation: pulse 0.35s infinite alternate; }
+.heat.over small { color: #f87171; }
+
+#pauseBtn {
+  pointer-events: auto; width: 42px; align-self: center; height: 42px; border-radius: 50%;
+  background: rgba(15, 23, 42, 0.9); border: 2px solid rgba(56, 189, 248, 0.5);
+  color: var(--sky); font-size: 14px; letter-spacing: -2px;
+}
+#pauseBtn:active { background: var(--sky-dark); color: #fff; }
+
+#banner {
+  position: fixed; top: calc(62px + var(--sat)); left: 50%; transform: translateX(-50%); z-index: 10;
+  background: #dc2626; border: 2px solid #fde047; color: #fff; font-weight: 700;
+  padding: 6px 18px; border-radius: 999px; letter-spacing: 1px; pointer-events: none;
+  animation: pulse 0.5s infinite alternate;
+}
+
+@keyframes pulse { from { opacity: 1; } to { opacity: 0.55; } }
+
+/* ---------- Botón SOLDAR ---------- */
+#weldBtn {
+  position: fixed; z-index: 10;
+  left: calc(22px + var(--sal)); bottom: calc(18px + var(--sab));
+  width: clamp(84px, 26vh, 120px); height: clamp(84px, 26vh, 120px);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fb923c, #c2410c 70%);
+  border: 4px solid #fdba74;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55), inset 0 2px 4px rgba(255, 255, 255, 0.5);
+  font-weight: 700; font-size: 13px; letter-spacing: 1px; line-height: 1.15; color: #fff;
+  touch-action: none;
+}
+#weldBtn span { font-size: 12px; }
+#weldBtn.lefty { left: auto; right: calc(22px + var(--sar)); }
+#weldBtn.down {
+  background: radial-gradient(circle at 50% 50%, #fff, #38bdf8 55%, #0369a1);
+  border-color: #fff; transform: scale(0.94);
+  box-shadow: 0 0 30px rgba(56, 189, 248, 0.9);
+}
+#weldBtn.down span { color: #0c4a6e; }
+
+/* ---------- Overlays / paneles ---------- */
+.overlay {
+  position: fixed; inset: 0; z-index: 20;
+  display: flex; align-items: center; justify-content: center;
+  padding: calc(8px + var(--sat)) calc(10px + var(--sar)) calc(8px + var(--sab)) calc(10px + var(--sal));
+  background: rgba(2, 6, 23, 0.9);
+}
+.panel {
+  width: 100%; max-width: 780px; max-height: 100%;
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.97), var(--panel));
+  border: 3px solid rgba(56, 189, 248, 0.4);
+  box-shadow: 0 0 25px rgba(56, 189, 248, 0.25), inset 0 0 20px rgba(255, 255, 255, 0.05);
+  border-radius: 18px; padding: 12px 16px; text-align: center;
+}
+.panel.narrow { max-width: 340px; display: flex; flex-direction: column; gap: 10px; }
+.panel.wide { max-width: 700px; }
+.scroll { overflow-y: auto; touch-action: pan-y; overscroll-behavior: contain; }
+
+.tag {
+  display: inline-block; background: rgba(56, 189, 248, 0.18); border: 1px solid rgba(56, 189, 248, 0.4);
+  color: #7dd3fc; font-weight: 700; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  padding: 2px 12px; border-radius: 999px; margin-bottom: 4px;
+}
+h1 { margin: 2px 0; font-size: clamp(20px, 5.4vh, 30px); font-weight: 700; letter-spacing: 1px; color: #fff; line-height: 1.1; }
+h1 span { color: var(--sky); }
+h2 { margin: 0; font-size: 26px; color: #fff; letter-spacing: 3px; }
+.sub { margin: 2px 0 8px; font-weight: 600; font-size: 13px; color: #cbd5e1; }
+
+/* Selector de niveles */
+.levels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 8px; text-align: left; }
+.level {
+  background: rgba(30, 41, 59, 0.9); border: 2px solid var(--line); border-radius: 12px;
+  padding: 6px 9px; display: flex; flex-direction: column; gap: 1px; touch-action: manipulation;
+}
+.level.sel { border-color: var(--sky); background: rgba(12, 74, 110, 0.55); }
+.level .name { font-weight: 700; font-size: 14px; color: #7dd3fc; }
+.level.sel .name { color: #fff; }
+.level canvas { width: 100%; height: 32px; display: block; margin: 2px 0; }
+.level .desc { font-size: 11px; color: #cbd5e1; font-weight: 600; }
+.level .best { font-size: 11px; color: var(--amber); font-family: 'Share Tech Mono', monospace; min-height: 13px; }
+
+.settings { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 4px; }
+.toggle {
+  background: rgba(30, 41, 59, 0.9); border: 2px solid var(--line); border-radius: 999px;
+  padding: 5px 12px; font-size: 12px; font-weight: 700; color: var(--muted); touch-action: manipulation;
+}
+.toggle::before { content: '○ '; }
+.toggle.on { border-color: var(--sky); color: #bae6fd; background: rgba(12, 74, 110, 0.5); }
+.toggle.on::before { content: '● '; color: #34d399; }
+.help { margin: 4px 0 8px; font-size: 12px; color: var(--muted); font-weight: 600; }
+
+.primary {
+  width: 100%; padding: 11px; border-radius: 12px; font-weight: 700; font-size: 18px; letter-spacing: 2px;
+  color: #fff; background: linear-gradient(180deg, #38bdf8, #0284c7);
+  box-shadow: 0 5px 14px rgba(2, 132, 199, 0.5), inset 0 2px 2px rgba(255, 255, 255, 0.6);
+  touch-action: manipulation;
+}
+.primary:active { transform: translateY(1px); filter: brightness(0.9); }
+.secondary {
+  flex: 1; padding: 11px; border-radius: 12px; font-weight: 700; font-size: 15px; letter-spacing: 1px;
+  background: #1e293b; border: 2px solid #475569; touch-action: manipulation;
+}
+.secondary:active { background: #334155; }
+.row { display: flex; gap: 10px; margin-top: 8px; }
+.narrow .row { margin-top: 0; }
+.row .primary { flex: 1; width: auto; font-size: 16px; }
+
+/* Resultados */
+.resGrid { display: flex; gap: 16px; align-items: center; margin: 6px 0; text-align: left; }
+.gradeCol { flex: 0 0 auto; text-align: center; }
+.gradeCircle {
+  width: 104px; height: 104px; border-radius: 50%; background: #0f172a; border: 4px solid var(--sky);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  box-shadow: 0 0 22px rgba(56, 189, 248, 0.3);
+}
+.gradeCircle small { font-size: 9px; letter-spacing: 1px; color: #cbd5e1; font-weight: 700; }
+.gradeCircle span { font-size: 52px; font-weight: 700; line-height: 1; color: var(--amber); }
+.gradeCircle span.g-A { color: #34d399; } .gradeCircle span.g-B { color: #38bdf8; }
+.gradeCircle span.g-C { color: #fbbf24; } .gradeCircle span.g-D { color: #ef4444; }
+.record { margin-top: 6px; font-size: 12px; font-weight: 700; color: var(--amber); letter-spacing: 1px; }
+.metricsCol { flex: 1; min-width: 0; }
+.metrics { background: rgba(15, 23, 42, 0.85); border: 2px solid var(--line); border-radius: 12px; padding: 8px 12px; font-size: 14px; }
+.metrics div { display: flex; justify-content: space-between; gap: 8px; padding: 2px 0; }
+.metrics span { color: #cbd5e1; }
+.metrics b { color: #fff; }
+.metrics .total { border-top: 2px solid var(--line); margin-top: 3px; padding-top: 5px; font-size: 16px; }
+.metrics .total span { color: #7dd3fc; font-weight: 700; }
+.feedback {
+  margin-top: 8px; background: rgba(8, 47, 73, 0.6); border: 2px solid rgba(7, 89, 133, 0.7);
+  border-radius: 12px; padding: 8px 12px; font-size: 12px; font-weight: 600; color: #bae6fd; line-height: 1.4;
+  max-height: 27vh; overflow-y: auto; touch-action: pan-y;
+}
+
+/* Pantallas de poca altura (celulares en horizontal) */
+@media (max-height: 430px) {
+  .tag, .level .desc { display: none; }
+  .sub { margin-bottom: 6px; }
+  .panel { padding: 8px 14px; }
+  .level canvas { height: 28px; }
+}
+/* Pantallas verticales: se recomienda horizontal, pero no se rompe */
+@media (max-width: 600px) {
+  .levels { grid-template-columns: repeat(2, 1fr); }
+  .resGrid { flex-direction: column; }
+}

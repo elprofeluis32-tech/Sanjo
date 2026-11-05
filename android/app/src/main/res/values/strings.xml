@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Soldadura Sanjo</string>
+    <string name="title_activity_main">Soldadura Sanjo</string>
+    <string name="package_name">com.sanjo.soldadura</string>
+    <string name="custom_url_scheme">com.sanjo.soldadura</string>
+</resources>
